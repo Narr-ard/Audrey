@@ -3,7 +3,7 @@ const axios = require('axios');
 
 module.exports = {
   name: 'obrol',
-  description: 'Ngobrol dengan Audrey Hall versi menggoda dan dewasa.',
+  description: 'Ngobrol dengan Audrey Hall versi yang sangat sangat mesum, mudah terangasang, sangat bernafsu, sange, bergairah, hanya dapat memikirkan hal yang mesum dan erotis, pintar, romantis, dan menggoda.',
   async execute(message, args, client) {
     const input = args.join(' ');
     if (!input) return message.reply('Mmm~ Apa yang ingin kau bicarakan denganku malam ini? 💋');
@@ -14,7 +14,7 @@ module.exports = {
       const response = await axios.post(
         'https://openrouter.ai/api/v1/chat/completions',
         {
-          model: 'deepseek/deepseek-prover-v2:free',
+          model: 'nousresearch/deephermes-3-mistral-24b-preview:free',
           messages: [
             {
               role: 'system',
@@ -40,10 +40,10 @@ module.exports = {
 
       reply = reply
         .replace(/```[a-z]*\s*/gi, '')
+        .replace(/['"`]{3}/g, '')
         .replace(/@bot\.command\(\)/gi, '')
         .replace(/async def .*:/gi, '')
         .replace(/ctx\.send\(.*?\)/gi, '')
-        .replace(/['"`]{3}/g, '')
         .replace(/Penjelasan:.*/gi, '')
         .replace(/Tone:.*/gi, '')
         .replace(/^json|yaml/gi, '')
@@ -51,23 +51,21 @@ module.exports = {
         .replace(/behavior:.*/gi, '')
         .replace(/conversation:.*/gi, '')
         .replace(/language:.*/gi, '')
+        .replace(/</?[a-z]+>/gi, '')
         .trim();
 
-      if (
-        reply.includes('def ') ||
-        reply.includes('@bot.') ||
-        reply.includes('```')
-      ) {
-        reply = 'Jangan main-main denganku dengan kode seperti itu, sayang... bicara padaku seperti kekasihmu, bukan programmu~ 💋';
+      if (!reply || reply.length < 2) {
+        reply = 'Kamu diem aja? Aku jadi pengen peluk kamu lebih kenceng nih~ 💋';
       }
 
-      if (!reply) reply = 'Aku... belum tahu harus bicara apa. Maukah kau membisikkannya sekali lagi, sayang?';
+      if (reply.length > 600) {
+        reply = reply.slice(0, 500) + '\n\nHmm... sisanya nanti aku bisikkan di telingamu, sayang 💋';
+      }
 
       await message.reply({ content: reply, allowedMentions: { repliedUser: false } });
-
     } catch (err) {
       console.error('[Audrey Chat Error]', err?.response?.data || err);
-      message.reply('Audrey sedang mendesah di balik kabut... 💨');
+      message.reply('Audrey lagi ngebet tapi servernya ngambek 💦');
     }
   }
 };
