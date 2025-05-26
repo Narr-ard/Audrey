@@ -1,20 +1,28 @@
 {
-  "name": "nodejs",
+  "name": "audreybot",
   "version": "1.0.0",
-  "description": "",
+  "description": "Audrey Discord Bot with NSFW, Doujin PDF, AI Chat, and more",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node index.js"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "keywords": [
+    "discord",
+    "nsfw",
+    "audrey",
+    "bot",
+    "doujin",
+    "pdf",
+    "chatbot",
+    "railway"
+  ],
+  "author": "AudreyBot",
+  "license": "MIT",
   "dependencies": {
-    "@types/node": "^22.13.11",
-    "axios": "^1.9.0",
-    "discord.js": "^14.19.3",
-    "dotenv": "^16.5.0",
-    "express": "^5.1.0",
+    "axios": "^1.6.7",
+    "discord.js": "^14.13.0",
+    "dotenv": "^16.3.1",
+    "express": "^4.19.2",
     "pdf-lib": "^1.17.1"
   }
 }
