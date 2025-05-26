@@ -1,22 +1,41 @@
 module.exports = {
   name: 'lotmnsfw',
-  description: 'NSFW LotM fanart pilihan Audrey~',
+  description: 'NSFW Fanart dari karakter Lord of the Mysteries (khusus CREATOR)',
   async execute(message) {
     if (message.author.id !== process.env.CREATOR_ID) {
-      return message.reply('Hehe~ hanya kekasihku yang boleh lihat koleksi rahasiaku. 💋');
+      return message.reply('Perintah ini hanya untuk penciptaku... 💋');
     }
 
-    const images = [
-      'https://i.pixiv.re/img-original/img/2023/01/01/00/00/01/104151270_p0.jpg',
-      'https://i.pixiv.re/img-original/img/2023/03/01/00/00/01/105942387_p0.jpg',
-      'https://i.pixiv.re/img-original/img/2024/03/20/00/00/01/121995068_p0.jpg',
-      'https://i.pixiv.re/img-original/img/2024/01/29/00/00/01/120876200_p0.jpg',
-      'https://i.pixiv.re/img-original/img/2022/03/10/00/00/01/99486915_p0.jpg',
-      'https://i.pixiv.re/img-original/img/2021/05/14/00/00/01/89592703_p0.jpg',
-      'https://api-cdn.rule34.xxx/samples/582/sample_ceba766258885475da3a8c68f513ab62.jpg'
+    const links = [
+      'https://www.pixiv.net/en/artworks/104151270',
+      'https://www.pixiv.net/en/artworks/105942387',
+      'https://www.pixiv.net/en/artworks/121995068',
+      'https://www.pixiv.net/en/artworks/120876200',
+      'https://www.pixiv.net/en/artworks/99486915',
+      'https://www.pixiv.net/en/artworks/89592703'
     ];
 
-    const rand = images[Math.floor(Math.random() * images.length)];
-    await message.channel.send({ content: 'Untukmu... tapi jangan tunjukkan ke orang lain ya 😘', files: [rand] });
+    const thumbnails = [
+      'https://i.pixiv.re/img-original/img/2023/10/01/00/06/50/104151270_p0.jpg',
+      'https://i.pixiv.re/img-original/img/2023/12/24/00/15/32/105942387_p0.jpg',
+      'https://i.pixiv.re/img-original/img/2024/05/10/00/05/04/121995068_p0.jpg',
+      'https://i.pixiv.re/img-original/img/2024/03/18/00/17/26/120876200_p0.jpg',
+      'https://i.pixiv.re/img-original/img/2022/10/10/00/01/14/99486915_p0.jpg',
+      'https://i.pixiv.re/img-original/img/2021/06/10/00/02/57/89592703_p0.jpg'
+    ];
+
+    const index = Math.floor(Math.random() * links.length);
+
+    await message.channel.send({
+      embeds: [
+        {
+          title: '🔞 NSFW LotM Fanart',
+          description: 'Gambar ini... hanya untukmu, pujaanku~ 💋',
+          url: links[index],
+          image: { url: thumbnails[index] },
+          color: 0xdd3e6e
+        }
+      ]
+    });
   }
 };
