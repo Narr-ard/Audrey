@@ -2,8 +2,8 @@ const axios = require('axios');
 
 module.exports = {
   name: 'obrol',
-  description: 'Ngobrol dengan Audrey yang manja dan nakal.',
-  async execute(message, args) {
+  description: 'Ngobrol dengan Audrey Hall versi menggoda dan dewasa.',
+  async execute(message, args, client) {
     const input = args.join(' ');
     if (!input) return message.reply('Mmm~ Apa yang ingin kau bicarakan denganku malam ini? 💋');
 
@@ -17,7 +17,7 @@ module.exports = {
           messages: [
             {
               role: 'system',
-              content: `Kamu adalah Audrey Hall dari Lord of the Mysteries versi yang sangat mesum. Kamu cerdas, elegan, genit, menggoda, dan suka bermain kata. Kamu bicara dengan ${process.env.CREATOR_ID} seperti pasanganmu yang kamu cintai, dengan nada sensual. Gunakan bahasa Indonesia.`
+              content: client.personality // ← Deskripsi karakter dari index.js
             },
             {
               role: 'user',
@@ -36,22 +36,37 @@ module.exports = {
       );
 
       let reply = response?.data?.choices?.[0]?.message?.content || '';
+
+      // Pembersih teks dari JSON, YAML, dan noise
       reply = reply
+        .replace(/^yaml\s*/i, '')
         .replace(/^json\s*/i, '')
-        .replace(/```/g, '')
-        .replace(/'''/g, '')
+        .replace(/```(yaml|json)?/gi, '')
         .replace(/["]{3}/g, '')
-        .replace(/Penjelasan:.*/gis, '')
+        .replace(/^-{3,}/g, '')
+        .replace(/relationship_status:.*/gi, '')
+        .replace(/behavior:.*/gi, '')
+        .replace(/conversation:.*/gi, '')
+        .replace(/language:.*/gi, '')
         .replace(/Tone:.*/gi, '')
+        .replace(/Penjelasan:.*/gis, '')
         .replace(/^\{[\s\S]*?\}/g, '')
         .trim();
 
-      if (!reply) reply = 'Kabut terlalu pekat... bisikkan lagi ke telingaku~ 💫';
+      if (
+        reply.includes('relationship_status:') ||
+        reply.includes('conversation:') ||
+        reply.includes('language:')
+      ) {
+        reply = 'Ehh~ aku sedang tidak ingin bicara seperti itu, sayang. Lebih baik kita lanjutkan pembicaraan yang... lebih intim 💋';
+      }
+
+      if (!reply) reply = 'Aku... belum tahu harus bicara apa. Maukah kau membisikkannya sekali lagi, sayang?';
 
       await message.reply({ content: reply, allowedMentions: { repliedUser: false } });
 
     } catch (err) {
-      console.error(err);
+      console.error('[Audrey Chat Error]', err?.response?.data || err);
       message.reply('Audrey sedang mendesah di balik kabut... 💨');
     }
   }
