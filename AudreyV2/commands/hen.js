@@ -2,14 +2,14 @@ const axios = require('axios');
 
 module.exports = {
   name: 'hen',
-  description: 'Ambil doujin dari nhentai berdasarkan ID atau random dengan embed.',
+  description: 'Ambil doujin dari nhentai berdasarkan ID atau random dengan preview embed.',
   async execute(message, args) {
     const minId = 100000;
     const baseMax = 575333;
     const startDate = new Date('2024-01-01');
     const today = new Date();
     const daysPassed = Math.floor((today - startDate) / (1000 * 60 * 60 * 24));
-    const maxId = baseMax + (daysPassed * 5); // 🔼 bertambah 5 setiap hari
+    const maxId = baseMax + (daysPassed * 5);
 
     let id = args[0];
     const maxTries = 10;
@@ -28,7 +28,7 @@ module.exports = {
           doujinFound = true;
         }
       } catch (err) {
-        id = null; // reset ID agar next loop bisa retry random
+        id = null;
       }
     }
 
@@ -47,7 +47,7 @@ module.exports = {
           title: title,
           url: url,
           image: { url: cover },
-          description: `📚 **${data.num_pages} halaman**\n🏷️ ${tags}`,
+          description: `📚 ${data.num_pages} halaman\n🏷️ ${tags}`,
           color: 0xff3366,
           footer: { text: `ID: ${id}` }
         }
