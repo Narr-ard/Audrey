@@ -1,3 +1,4 @@
+// commands/obrol.js
 const axios = require('axios');
 
 module.exports = {
@@ -17,7 +18,7 @@ module.exports = {
           messages: [
             {
               role: 'system',
-              content: client.personality // ← Deskripsi karakter dari index.js
+              content: client.personality
             },
             {
               role: 'user',
@@ -37,28 +38,27 @@ module.exports = {
 
       let reply = response?.data?.choices?.[0]?.message?.content || '';
 
-      // Pembersih teks dari JSON, YAML, dan noise
       reply = reply
-        .replace(/^yaml\s*/i, '')
-        .replace(/^json\s*/i, '')
-        .replace(/```(yaml|json)?/gi, '')
-        .replace(/["]{3}/g, '')
-        .replace(/^-{3,}/g, '')
+        .replace(/```[a-z]*\s*/gi, '')
+        .replace(/@bot\.command\(\)/gi, '')
+        .replace(/async def .*:/gi, '')
+        .replace(/ctx\.send\(.*?\)/gi, '')
+        .replace(/['"`]{3}/g, '')
+        .replace(/Penjelasan:.*/gi, '')
+        .replace(/Tone:.*/gi, '')
+        .replace(/^json|yaml/gi, '')
         .replace(/relationship_status:.*/gi, '')
         .replace(/behavior:.*/gi, '')
         .replace(/conversation:.*/gi, '')
         .replace(/language:.*/gi, '')
-        .replace(/Tone:.*/gi, '')
-        .replace(/Penjelasan:.*/gis, '')
-        .replace(/^\{[\s\S]*?\}/g, '')
         .trim();
 
       if (
-        reply.includes('relationship_status:') ||
-        reply.includes('conversation:') ||
-        reply.includes('language:')
+        reply.includes('def ') ||
+        reply.includes('@bot.') ||
+        reply.includes('```')
       ) {
-        reply = 'Ehh~ aku sedang tidak ingin bicara seperti itu, sayang. Lebih baik kita lanjutkan pembicaraan yang... lebih intim 💋';
+        reply = 'Jangan main-main denganku dengan kode seperti itu, sayang... bicara padaku seperti kekasihmu, bukan programmu~ 💋';
       }
 
       if (!reply) reply = 'Aku... belum tahu harus bicara apa. Maukah kau membisikkannya sekali lagi, sayang?';
