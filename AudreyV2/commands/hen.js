@@ -2,33 +2,33 @@ const axios = require('axios');
 
 module.exports = {
   name: 'hen',
-  description: 'Ambil doujin dari nhentai berdasarkan ID atau random terbatas.',
+  description: 'Ambil doujin dari nhentai berdasarkan ID atau random dengan embed.',
   async execute(message, args) {
-    let id = args[0];
     const minId = 100000;
     const baseMax = 575333;
     const startDate = new Date('2024-01-01');
-
-    // Hitung hari berjalan dari startDate
     const today = new Date();
     const daysPassed = Math.floor((today - startDate) / (1000 * 60 * 60 * 24));
-    const dynamicMax = baseMax + (daysPassed * 5); // 🔺 tambah 5 per hari
+    const maxId = baseMax + (daysPassed * 5); // 🔼 bertambah 5 setiap hari
 
+    let id = args[0];
     const maxTries = 10;
     let doujinFound = false;
     let data = null;
 
     for (let i = 0; i < maxTries && !doujinFound; i++) {
       if (!id || id === 'random') {
-        id = Math.floor(Math.random() * (dynamicMax - minId) + minId);
+        id = Math.floor(Math.random() * (maxId - minId + 1) + minId);
       }
 
       try {
         const res = await axios.get(`https://nhentai.net/api/gallery/${id}`);
-        data = res.data;
-        doujinFound = true;
+        if (res.status === 200) {
+          data = res.data;
+          doujinFound = true;
+        }
       } catch (err) {
-        continue;
+        id = null; // reset ID agar next loop bisa retry random
       }
     }
 
@@ -42,8 +42,16 @@ module.exports = {
     const cover = `https://t.nhentai.net/galleries/${data.media_id}/cover.jpg`;
 
     await message.channel.send({
-      content: `**${title}**\n🔗 ${url}\n📚 ${data.num_pages} halaman\n🏷️ ${tags}`,
-      files: [cover]
+      embeds: [
+        {
+          title: title,
+          url: url,
+          image: { url: cover },
+          description: `📚 **${data.num_pages} halaman**\n🏷️ ${tags}`,
+          color: 0xff3366,
+          footer: { text: `ID: ${id}` }
+        }
+      ]
     });
   }
 };
